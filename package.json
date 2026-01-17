@@ -1,0 +1,25 @@
+{
+  "name": "console-pets",
+  "version": "1.0.0",
+  "description": "Cute ASCII pets that live in your terminal and react to your code",
+  "main": "index.js",
+  "bin": {
+    "console-pets": "./bin/console-pets.js"
+  },
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "terminal",
+    "ascii",
+    "pet",
+    "cli",
+    "cute",
+    "console"
+  ],
+  "author": "Ankush",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2"
+  }
+}
