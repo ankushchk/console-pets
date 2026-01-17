@@ -1,35 +1,23 @@
 const chalk = require("chalk");
+const Pet = require("./pet");
 
 class ConsolePet {
   constructor() {
-    this.state = "idle";
-    this.frameIndex = 0;
+    this.pet = new Pet();
     this.lastActivity = Date.now();
     this.updateInterval = null;
+  }
 
-    this.animations = {
-      idle: [`  ∧＿∧\n ( ˘ω˘ )zzZ`, `  ∧＿∧\n ( -ω- )Zzz`],
-      working: [`  ∧∧∧  ⌨️\n (•̀ᴗ•́)و  *tap tap*`, `  ∧∧∧\n (•̀ω•́)  *typing...*`],
-      success: [`  ∧＿∧\n (◠‿◠) ✓\n  done!`, `  ∧＿∧\n (◕‿‿◕) ✨\n  nice!`],
-      error: [`  ∧＿∧\n (╥﹏╥)  oh no...`, `  ∧＿∧\n (✖╭╮✖)  *hides*\n    ||`],
-      thinking: [
-        `  ∧＿∧\n (・ω・?)  ◯`,
-        `  ∧＿∧\n (・ω・)   ◐`,
-        `  ∧＿∧\n (・ω・)   ◓`,
-      ],
-    };
+  get state() {
+    return this.pet.state;
   }
 
   start() {
     this.hookConsole();
-
     this.startIdleCheck();
-
     this.hookProcessEvents();
-
     this.startAnimation();
-
-    this.setState("idle");
+    this.pet.setState("idle");
   }
 
   hookConsole() {
@@ -39,84 +27,63 @@ class ConsolePet {
 
     console.log = function (...args) {
       self.lastActivity = Date.now();
-      self.setState("working");
+      self.pet.setState("working");
       originalLog.apply(console, args);
     };
 
     console.error = function (...args) {
       self.lastActivity = Date.now();
-      self.setState("error");
+      self.pet.setState("error");
       originalError.apply(console, args);
-      setTimeout(() => self.setState("idle"), 3000);
+      setTimeout(() => self.pet.setState("idle"), 3000);
     };
   }
 
   hookProcessEvents() {
     process.on("uncaughtException", (err) => {
-      this.setState("error");
+      this.pet.setState("error");
       console.error(err);
       process.exit(1);
     });
   }
 
   showSuccess() {
-    this.setState("success");
+    this.pet.setState("success");
     this.render();
   }
 
   showError() {
-    this.setState("error");
+    this.pet.setState("error");
     this.render();
   }
 
   startIdleCheck() {
     setInterval(() => {
       const idleTime = Date.now() - this.lastActivity;
-      if (idleTime > 5000 && this.state !== "idle") {
-        this.setState("idle");
+      if (idleTime > 5000 && this.pet.state !== "idle") {
+        this.pet.setState("idle");
       }
     }, 1000);
   }
 
   startAnimation() {
     this.updateInterval = setInterval(() => {
-      this.frameIndex =
-        (this.frameIndex + 1) % this.animations[this.state].length;
+      this.pet.nextFrame();
       this.render();
     }, 800);
   }
 
   setState(newState) {
-    if (this.state !== newState) {
-      this.state = newState;
-      this.frameIndex = 0;
-    }
+    this.pet.setState(newState);
   }
 
   render() {
-    process.stdout.write("\x1b[2K\x1b[1A\x1b[2K\x1b[1A\x1b[2K\x1b[1A\x1b[2K");
-
-    const frame = this.animations[this.state][this.frameIndex];
-
-    let coloredFrame;
-    switch (this.state) {
-      case "success":
-        coloredFrame = chalk.green(frame);
-        break;
-      case "error":
-        coloredFrame = chalk.red(frame);
-        break;
-      case "working":
-        coloredFrame = chalk.cyan(frame);
-        break;
-      case "thinking":
-        coloredFrame = chalk.yellow(frame);
-        break;
-      default:
-        coloredFrame = chalk.gray(frame);
+    // Only clear if we are in a TTY to avoid messing up logs
+    if (process.stdout.isTTY) {
+      process.stdout.write("\x1b[2K\x1b[1A\x1b[2K\x1b[1A\x1b[2K\x1b[1A\x1b[2K");
+      const frame = this.pet.getCurrentFrame();
+      process.stdout.write("\n" + frame + "\n");
     }
-
-    console.log("\n" + coloredFrame + "\n");
   }
 
   stop() {
@@ -126,16 +93,16 @@ class ConsolePet {
   }
 }
 
-const pet = new ConsolePet();
+const consolePet = new ConsolePet();
 
 module.exports = {
-  start: () => pet.start(),
-  stop: () => pet.stop(),
-  setState: (state) => pet.setState(state),
-  showSuccess: () => pet.showSuccess(),
-  showError: () => pet.showError(),
+  start: () => consolePet.start(),
+  stop: () => consolePet.stop(),
+  setState: (state) => consolePet.setState(state),
+  showSuccess: () => consolePet.showSuccess(),
+  showError: () => consolePet.showError(),
 };
 
 if (require.main === module) {
-  pet.start();
+  consolePet.start();
 }

@@ -1,0 +1,6 @@
+.console-pets*
+.gemini/
+new/
+new_test_file.txt
+.DS_Store
+node_modules/
