@@ -20,11 +20,13 @@ if (separatorIndex === -1) {
   process.exit(1);
 }
 
+const commandParts = args.slice(separatorIndex + 1);
 const cmd = commandParts[0];
 const cmdArgs = commandParts.slice(1);
 
-
-const child = spawn(cmd, cmdArgs, {});
+const child = spawn(cmd, cmdArgs, {
+  stdio: "inherit",
+});
 
 child.on("exit", (code) => {
   if (code === 0) {
