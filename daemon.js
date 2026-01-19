@@ -2,9 +2,10 @@ const Pet = require("./pet");
 const Monitor = require("./monitor");
 const Display = require("./display");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
-const PID_FILE = path.join(process.env.HOME, ".console-pets.pid");
+const PID_FILE = path.join(os.homedir(), ".console-pets.pid");
 
 const pet = new Pet();
 const monitor = new Monitor(pet);

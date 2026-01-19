@@ -44,7 +44,7 @@ class Monitor {
   }
 
   monitorShellHistory() {
-    const home = process.env.HOME || process.env.USERPROFILE;
+    const home = require('os').homedir();
     const historyFiles = [
       path.join(home, '.bash_history'),
       path.join(home, '.zsh_history')

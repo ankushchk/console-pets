@@ -1,4 +1,5 @@
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 class Display {
@@ -9,8 +10,7 @@ class Display {
   }
 
   getSocketPath() {
-    const home = process.env.HOME || process.env.USERPROFILE;
-    return path.join(home, '.console-pets-state');
+    return path.join(os.homedir(), '.console-pets-state');
   }
 
   start() {

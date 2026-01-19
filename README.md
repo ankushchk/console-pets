@@ -16,12 +16,12 @@ This mode lets a pet live in your terminal and react to your activity across all
 
 **For Zsh (Mac default):** Add this to your `~/.zshrc`:
 ```bash
-source /path/to/your/console-pets/shell-prompt.sh
+source $(npm root -g)/console-pets/shell-prompt.sh
 ```
 
 **For Bash:** Add this to your `~/.bashrc`:
 ```bash
-source /path/to/your/console-pets/shell-prompt.sh
+source $(npm root -g)/console-pets/shell-prompt.sh
 ```
 
 That's it! Every time you open a terminal, the pet will check if it needs to wake up and start watching your work.

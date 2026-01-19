@@ -1,6 +1,7 @@
 const { spawn, execSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 const chalk = require("chalk");
 const pet = require("../index.js");
 
@@ -24,7 +25,7 @@ function showUsage() {
 
 const command = args[0];
 
-const PID_FILE = path.join(process.env.HOME, ".console-pets.pid");
+const PID_FILE = path.join(os.homedir(), ".console-pets.pid");
 
 if (command === "start") {
   // Check if already running
@@ -42,7 +43,7 @@ if (command === "start") {
   }
 
   const daemonPath = path.join(__dirname, "../daemon.js");
-  const logPath = path.join(process.env.HOME, ".console-pets.log");
+  const logPath = path.join(os.homedir(), ".console-pets.log");
   const out = fs.openSync(logPath, "a");
   const err = fs.openSync(logPath, "a");
 
@@ -69,7 +70,7 @@ if (command === "start") {
   }
   process.exit(0);
 } else if (command === "status") {
-  const statePath = path.join(process.env.HOME, ".console-pets-state");
+  const statePath = path.join(os.homedir(), ".console-pets-state");
   let isRunning = false;
   
   if (fs.existsSync(PID_FILE)) {

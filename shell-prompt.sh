@@ -2,13 +2,7 @@
 
 # Configuration
 # Find the directory where THIS script is located
-SOURCE="${BASH_SOURCE[0]:-$0}"
-while [ -h "$SOURCE" ]; do
-  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
-PET_PROJECT_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+PET_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]:-$0}" )" && pwd )"
 STATE_FILE="$HOME/.console-pets-state"
 PID_FILE="$HOME/.console-pets.pid"
 
